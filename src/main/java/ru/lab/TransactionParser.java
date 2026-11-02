@@ -25,7 +25,7 @@ public final class TransactionParser {
     private static final int FIELD_COUNT = 3;
     private static final int MAX_MERCHANT_LENGTH = 100;
     private static final Pattern DATE = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
-    private static final Pattern AMOUNT =Pattern.compile("-?\\d+(\\.\\d{1,2})?");
+    private static final Pattern AMOUNT = Pattern.compile("-?\\d+(\\.\\d{1,2})?");
 
     private TransactionParser() {
     }
