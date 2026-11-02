@@ -39,13 +39,26 @@ class TransactionParserTest {
                 Arguments.of("2026-10-26;Лента;10;extra", Reason.WRONG_FIELD_COUNT),
                 Arguments.of("26.10.2026;Лента;10", Reason.INVALID_DATE),
                 Arguments.of("2026-02-30;Лента;10", Reason.INVALID_DATE),
+                Arguments.of("+12026-10-26;Лента;10", Reason.INVALID_DATE),
+                Arguments.of("-0001-01-01;Лента;10", Reason.INVALID_DATE),
+                Arguments.of("2026-1-5;Лента;10", Reason.INVALID_DATE),
                 Arguments.of(";Лента;10", Reason.MISSING_DATE),
+                Arguments.of(";;", Reason.MISSING_DATE),
+                Arguments.of("　;Лента;10", Reason.MISSING_DATE),
+                Arguments.of("　", Reason.BLANK_LINE),
                 Arguments.of("2026-10-26; ;10", Reason.MISSING_MERCHANT),
+                Arguments.of("2026-10-26;　;10", Reason.MISSING_MERCHANT),
                 Arguments.of("2026-10-26;Лента;", Reason.MISSING_AMOUNT),
+                Arguments.of("2026-10-26;Лента;　", Reason.MISSING_AMOUNT),
                 Arguments.of("2026-10-26;Лента;12,50", Reason.INVALID_AMOUNT),
                 Arguments.of("2026-10-26;Лента;1e3", Reason.INVALID_AMOUNT),
                 Arguments.of("2026-10-26;Лента;10.123", Reason.INVALID_AMOUNT),
-                Arguments.of("2026-10-26;Лента;abc", Reason.INVALID_AMOUNT));
+                Arguments.of("2026-10-26;Лента;abc", Reason.INVALID_AMOUNT),
+                Arguments.of("2026-10-26;Лента;-", Reason.INVALID_AMOUNT),
+                Arguments.of("2026-10-26;Лента;0", Reason.INVALID_AMOUNT),
+                Arguments.of("2026-10-26;Лента;0.00", Reason.INVALID_AMOUNT),
+                Arguments.of("2026-10-26;Лента;-0", Reason.INVALID_AMOUNT),
+                Arguments.of("2026-10-26;Лента;-0.00", Reason.INVALID_AMOUNT));
     }
 
     @ParameterizedTest
