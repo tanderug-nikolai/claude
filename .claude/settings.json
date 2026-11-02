@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && if [ -z \"$(git status --porcelain src pom.xml)\" ]; then exit 0; fi; if mvn -q test >/dev/null 2>&1; then echo '{\"systemMessage\":\"mvn test: все тесты прошли\"}'; else echo '{\"systemMessage\":\"mvn test: ПРОВАЛ - запустите mvn test и посмотрите вывод\"}'; fi",
+            "timeout": 120,
+            "statusMessage": "Запускаю тесты..."
+          }
+        ]
+      }
+    ]
+  }
+}
