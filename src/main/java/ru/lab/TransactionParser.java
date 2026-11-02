@@ -10,10 +10,13 @@ import ru.lab.TransactionParseException.Reason;
  * Parses lines of the form {@code yyyy-MM-dd;merchant;amount}, e.g.
  * {@code 2026-10-26;Пятёрочка;1240.50}.
  *
- * <p>The date must be exactly four-digit year, two-digit month and day. The
+ * <p>The date must have a four-digit year and two-digit month and day. The
  * amount uses a dot as the decimal separator, has at most two fractional
- * digits, may be negative (refunds) and must not be zero. Invalid input results in an
- * {@link TransactionParseException} describing what exactly is wrong.
+ * digits, may be negative (refunds) and must not be zero.
+ *
+ * <p>Any invalid input, including {@code null}, results in a
+ * {@link TransactionParseException} whose
+ * {@link TransactionParseException#getReason() reason} says what exactly is wrong.
  */
 public final class TransactionParser {
 
