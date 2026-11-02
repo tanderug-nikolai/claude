@@ -11,6 +11,7 @@ import ru.lab.TransactionParseException.Reason;
  * {@code 2026-10-26;Пятёрочка;1240.50}.
  *
  * <p>The date must have a four-digit year and two-digit month and day. The
+ * merchant must not exceed 100 characters (code points) after stripping. The
  * amount uses a dot as the decimal separator, has at most two fractional
  * digits, may be negative (refunds) and must not be zero.
  *
@@ -22,6 +23,7 @@ public final class TransactionParser {
 
     private static final char SEPARATOR = ';';
     private static final int FIELD_COUNT = 3;
+    private static final int MAX_MERCHANT_LENGTH = 100;
     private static final Pattern DATE = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
     private static final Pattern AMOUNT =Pattern.compile("-?\\d+(\\.\\d{1,2})?");
 
@@ -67,6 +69,11 @@ public final class TransactionParser {
     private static String parseMerchant(String line, String raw) {
         if (raw.isEmpty()) {
             throw error(line, Reason.MISSING_MERCHANT, "название магазина не указано");
+        }
+        int length = raw.codePointCount(0, raw.length());
+        if (length > MAX_MERCHANT_LENGTH) {
+            throw error(line, Reason.INVALID_MERCHANT, "название магазина длиной %d символов, допустимо не более %d"
+                    .formatted(length, MAX_MERCHANT_LENGTH));
         }
         return raw;
     }

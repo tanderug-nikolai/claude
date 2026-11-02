@@ -15,7 +15,8 @@ public final class TransactionParseException extends IllegalArgumentException {
         INVALID_DATE,
         MISSING_MERCHANT,
         MISSING_AMOUNT,
-        INVALID_AMOUNT
+        INVALID_AMOUNT,
+        INVALID_MERCHANT
     }
 
     private final String line;

@@ -49,6 +49,9 @@ class TransactionParserTest {
                 Arguments.of("　", Reason.BLANK_LINE),
                 Arguments.of("2026-10-26; ;10", Reason.MISSING_MERCHANT),
                 Arguments.of("2026-10-26;　;10", Reason.MISSING_MERCHANT),
+                Arguments.of("2026-10-26;" + "м".repeat(101) + ";10", Reason.INVALID_MERCHANT),
+                Arguments.of("2026-10-26;" + "м".repeat(5000) + ";10", Reason.INVALID_MERCHANT),
+                Arguments.of("2026-10-26;" + "😀".repeat(101) + ";10", Reason.INVALID_MERCHANT),
                 Arguments.of("2026-10-26;Лента;", Reason.MISSING_AMOUNT),
                 Arguments.of("2026-10-26;Лента;　", Reason.MISSING_AMOUNT),
                 Arguments.of("2026-10-26;Лента;12,50", Reason.INVALID_AMOUNT),
@@ -71,6 +74,27 @@ class TransactionParserTest {
         assertEquals(expectedReason, e.getReason());
         assertEquals(line, e.getLine());
         assertTrue(e.getMessage().startsWith("Невалидная транзакция"), e.getMessage());
+    }
+
+    @Test
+    void acceptsMerchantOfMaximumLength() {
+        String merchant = "м".repeat(100);
+
+        assertEquals(merchant, TransactionParser.parse("2026-10-26;" + merchant + ";10").merchant());
+    }
+
+    @Test
+    void measuresMerchantLengthAfterStripping() {
+        String merchant = "м".repeat(100);
+
+        assertEquals(merchant, TransactionParser.parse("2026-10-26;  " + merchant + "  ;10").merchant());
+    }
+
+    @Test
+    void countsMerchantLengthInCodePoints() {
+        String merchant = "😀".repeat(100);
+
+        assertEquals(merchant, TransactionParser.parse("2026-10-26;" + merchant + ";10").merchant());
     }
 
     @Test
