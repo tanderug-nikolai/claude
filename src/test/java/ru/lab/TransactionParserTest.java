@@ -42,6 +42,7 @@ class TransactionParserTest {
                 Arguments.of("+12026-10-26;Лента;10", Reason.INVALID_DATE),
                 Arguments.of("-0001-01-01;Лента;10", Reason.INVALID_DATE),
                 Arguments.of("2026-1-5;Лента;10", Reason.INVALID_DATE),
+                Arguments.of("٢٠٢٦-١٠-٢٦;Лента;10", Reason.INVALID_DATE),
                 Arguments.of(";Лента;10", Reason.MISSING_DATE),
                 Arguments.of(";;", Reason.MISSING_DATE),
                 Arguments.of("　;Лента;10", Reason.MISSING_DATE),
@@ -58,7 +59,8 @@ class TransactionParserTest {
                 Arguments.of("2026-10-26;Лента;0", Reason.INVALID_AMOUNT),
                 Arguments.of("2026-10-26;Лента;0.00", Reason.INVALID_AMOUNT),
                 Arguments.of("2026-10-26;Лента;-0", Reason.INVALID_AMOUNT),
-                Arguments.of("2026-10-26;Лента;-0.00", Reason.INVALID_AMOUNT));
+                Arguments.of("2026-10-26;Лента;-0.00", Reason.INVALID_AMOUNT),
+                Arguments.of("2026-10-26;Лента;١٢", Reason.INVALID_AMOUNT));
     }
 
     @ParameterizedTest
@@ -69,6 +71,15 @@ class TransactionParserTest {
         assertEquals(expectedReason, e.getReason());
         assertEquals(line, e.getLine());
         assertTrue(e.getMessage().startsWith("Невалидная транзакция"), e.getMessage());
+    }
+
+    @Test
+    void parsesVeryLongAmount() {
+        String digits = "9".repeat(1000) + ".99";
+
+        Transaction t = TransactionParser.parse("2026-10-26;Лента;" + digits);
+
+        assertEquals(new BigDecimal(digits), t.amount());
     }
 
     @Test
